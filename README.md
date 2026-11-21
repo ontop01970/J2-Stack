@@ -37,6 +37,8 @@ User                        ▼
 
 **J² retrieves memory facts on demand via a structured search tool, gated by a relevance router.** Hindsight force-feeds them into every window. That's the difference between a library you check out from and a firehose you stand under.
 
+![J² Stack Demo](assets/demo.gif)
+
 ## Quick Start
 
 ```bash
