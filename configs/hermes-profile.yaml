@@ -1,0 +1,39 @@
+# J² Stack Hermes Profile
+# Activate with: hermes profile use j2
+#
+# Wires Jarvis as the on-demand memory backend and Jev as the
+# agent router that gates memory retrieval.
+#
+# Key design: memory is NOT dumped into the context window.
+# jarvis_lookup fetches only what Jev judges relevant, max 2 searches per turn.
+
+name: j2
+label: "J² Stack — Jarvis + Jev Memory"
+
+memory:
+  provider: jarvis
+  jarvis:
+    api_url: http://127.0.0.1:8000
+    max_facts_per_lookup: 3
+    max_searches_per_request: 2
+    relevance_threshold: 0.4
+    # No auto-inject — memory is query-only.
+
+plugins:
+  jarvis_lookup:
+    enabled: true
+    gate: jev  # Jev decides when lookups fire
+
+  jev_agent_router:
+    enabled: true
+    policy:
+      abstain_on_low_relevance: true
+      fallback_on_failure: drop_to_user
+      max_reroute_attempts: 1
+
+stt:
+  enabled: true
+  provider: openrouter
+
+voice:
+  voice_chat_mode: chained

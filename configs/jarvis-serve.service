@@ -1,0 +1,19 @@
+[Unit]
+Description=Jarvis Local Memory API (J² Stack)
+Documentation=https://github.com/your-org/OpenJarvis
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=%h/OpenJarvis/.venv/bin/python -m openjarvis.api serve
+WorkingDirectory=%h/OpenJarvis
+Restart=on-failure
+RestartSec=5
+Environment=JARVIS_DB_PATH=%h/.local/share/jarvis/memory.db
+Environment=JARVIS_NUM_CTX=3000
+Environment=JARVIS_HOST=127.0.0.1
+Environment=JARVIS_PORT=8000
+Environment=JARVIS_CORS_ORIGIN=http://127.0.0.1:8789
+
+[Install]
+WantedBy=default.target
