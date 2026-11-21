@@ -1,5 +1,13 @@
 # J² Stack — Local Memory That Doesn't Eat Your Context Window
 
+<p align="center">
+  <a href="https://github.com/ontop01970/J2-Stack"><img src="https://img.shields.io/github/stars/ontop01970/J2-Stack?style=for-the-badge&logo=github" alt="Stars"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green?style=for-the-badge" alt="MIT License"></a>
+  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/python-3.10+-blue?style=for-the-badge&logo=python" alt="Python 3.10+"></a>
+  <a href="https://hermes-agent.nousresearch.com"><img src="https://img.shields.io/badge/Hermes%20Agent-ready-8A2BE2?style=for-the-badge" alt="Hermes Ready"></a>
+  <a href="https://github.com/open-jarvis/OpenJarvis"><img src="https://img.shields.io/badge/OpenJarvis-powered-FF6B35?style=for-the-badge" alt="OpenJarvis Powered"></a>
+</p>
+
 J² (J-squared) integrates **Jarvis** + **Jev** into **Hermes Agent** for persistent on-demand memory that lives in your database, not your prompt.
 
 ```
@@ -32,14 +40,14 @@ User                        ▼
 ## Quick Start
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/<you>/j2-stack/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/ontop01970/J2-Stack/main/install.sh | bash
 ```
 
 Or manually:
 
 ```bash
 # 1. Clone and set up Jarvis
-git clone https://github.com/your-org/OpenJarvis
+git clone https://github.com/open-jarvis/OpenJarvis
 cd OpenJarvis && uv sync && cd ..
 
 # 2. Install Jev agent router

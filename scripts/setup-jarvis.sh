@@ -23,7 +23,7 @@ if [ -d "$JARVIS_DIR" ]; then
   cd "$JARVIS_DIR" && git pull --ff-only
 else
   info "Cloning OpenJarvis..."
-  git clone https://github.com/your-org/OpenJarvis.git "$JARVIS_DIR"
+  git clone https://github.com/open-jarvis/OpenJarvis.git "$JARVIS_DIR"
   cd "$JARVIS_DIR"
 fi
 
