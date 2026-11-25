@@ -31,7 +31,7 @@ User                        ▼
 | **Memory load**  | All entries → every prompt         | Only what you search for              |
 | **Context cost** | K of tokens per turn (grows)       | Zero unless a lookup fires            |
 | **Latency**      | LLM ingests memory on every reply   | Sub-ms SQLite FTS5 search             |
-| **Routing**      | None — memory always fires          | Jev judges *if* a lookup is needed    |
+| **Routing**      | None — memory always fires          | Jev judges lookups AND storage targets |
 | **Storage**      | In-process Python objects           | Durable SQLite + FTS5/BM25            |
 | **API spend**    | Pay for memory tokens every turn     | Pay nothing for idle memory            |
 
@@ -68,8 +68,22 @@ systemctl --user enable --now jarvis-serve
 | Component | Role |
 |-----------|------|
 | **Jarvis** (OpenJarvis) | Local memory API server backed by SQLite FTS5/BM25. ~3000 facts out of the box, zero cloud dependencies. |
-| **Jev** | Hermes agent router that decides when memory retrieval is justified — abstains when it's not, falls back sensibly. |
+| **Jev** | Hermes agent router that decides when memory retrieval is justified — abstains when it's not, falls back sensibly. Also routes *writing*: storage decisions go through Jev to pick user-fact, procedure, or project-context targets. |
 | **Hermes** | The agent framework that ties it together. The `jarvis_lookup` tool queries Jarvis on demand; Jev gates the call. |
+
+## How Storage Routing Works
+
+Before persisting anything, Jev's `agent_route` chooses the right storage target:
+
+```
+User Fact Storage  ────► memory(target='user')      — who you are, what you like
+Procedure Storage  ────► skill_manage create/patch   — how-to guides, setup steps
+Project Context    ────► Jarvis POST /v1/memory       — project state, git history
+```
+
+Call `agent_route(task="<what to store>", agents=[user-fact, procedure, project])` and Jev picks the best match with fallback. This keeps facts in the domain where they're most useful — no more guessing whether a preference belongs in a skill or a config file.
+
+See [`skills/storage-router.md`](skills/storage-router.md) for the full protocol.
 
 ## How Memory Flows
 
@@ -94,6 +108,8 @@ j2-stack/
 ├── configs/
 │   ├── hermes-profile.yaml        # J² Hermes profile (Jarvis + Jev wired)
 │   └── jarvis-serve.service       # Systemd user unit for Jarvis API
+├── skills/
+│   └── storage-router.md          # Storage routing protocol & agent definitions
 ├── scripts/
 │   ├── setup-jarvis.sh            # Clone OpenJarvis, build Rust ext, init DB
 │   └── setup-jev.sh               # Install and configure Jev plugin

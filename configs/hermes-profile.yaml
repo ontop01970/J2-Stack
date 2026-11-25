@@ -2,13 +2,14 @@
 # Activate with: hermes profile use j2
 #
 # Wires Jarvis as the on-demand memory backend and Jev as the
-# agent router that gates memory retrieval.
+# agent router that gates memory retrieval and storage routing.
 #
 # Key design: memory is NOT dumped into the context window.
 # jarvis_lookup fetches only what Jev judges relevant, max 2 searches per turn.
+# Storage is routed through Jev to the right target (user fact, procedure, project).
 
 name: j2
-label: "J² Stack — Jarvis + Jev Memory"
+label: "J² Stack — Jarvis + Jev Memory + Storage Routing"
 
 memory:
   provider: jarvis
@@ -30,6 +31,43 @@ plugins:
       abstain_on_low_relevance: true
       fallback_on_failure: drop_to_user
       max_reroute_attempts: 1
+    storage_agents:
+      - id: user-fact-store
+        name: User Fact Storage
+        description: >
+          Stores personal user facts, preferences, identity, likes, dislikes,
+          and biographical details via memory(target='user'). Best for facts
+          about who the user is and what they prefer.
+        capabilities: [memory, user-profile, preferences, identity, bio]
+        tags: [personal, user, preference, identity, bio]
+        cost: 0.1
+        latency: 0.1
+        reliability: 0.9
+        scope: j2-stack
+      - id: procedure-store
+        name: Procedure Storage
+        description: >
+          Stores reusable step-by-step instructions, how-to guides, setup steps,
+          workflows, operational procedures, troubleshooting steps, and config
+          walkthroughs via skill_manage. Best for how-to guides and process docs.
+        capabilities: [skills, procedures, workflows, howto, guide, troubleshooting, setup]
+        tags: [procedure, workflow, howto, guide, setup, troubleshoot]
+        cost: 0.3
+        latency: 0.3
+        reliability: 0.85
+        scope: j2-stack
+      - id: project-context-store
+        name: Project Context Storage
+        description: >
+          Stores project state, system configuration details, historical records,
+          session context, git history, repo state, and deployment info via Jarvis.
+          Best for technical project data and system state.
+        capabilities: [jarvis, project, state, history, config, repo, deploy]
+        tags: [project, state, config, system, repo, git, commit, deploy]
+        cost: 0.2
+        latency: 0.2
+        reliability: 0.85
+        scope: j2-stack
 
 stt:
   enabled: true
