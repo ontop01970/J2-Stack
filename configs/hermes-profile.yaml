@@ -48,10 +48,11 @@ plugins:
         name: Procedure Storage
         description: >
           Stores reusable step-by-step instructions, how-to guides, setup steps,
-          workflows, operational procedures, troubleshooting steps, and config
-          walkthroughs via skill_manage. Best for how-to guides and process docs.
-        capabilities: [skills, procedures, workflows, howto, guide, troubleshooting, setup]
-        tags: [procedure, workflow, howto, guide, setup, troubleshoot]
+          installation guides, workflows, operational procedures, troubleshooting
+          steps, and configuration walkthroughs via skill_manage. Best for how-to
+          guides, setup steps, and process documentation.
+        capabilities: [skills, procedures, workflows, howto, guide, troubleshooting, setup, installation]
+        tags: [procedure, workflow, howto, guide, setup, troubleshoot, install, walkthrough]
         cost: 0.3
         latency: 0.3
         reliability: 0.85
