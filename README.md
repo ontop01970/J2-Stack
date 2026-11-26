@@ -71,17 +71,17 @@ systemctl --user enable --now jarvis-serve
 | **Jev** | Hermes agent router that decides when memory retrieval is justified — abstains when it's not, falls back sensibly. Also routes *writing*: storage decisions go through Jev to pick user-fact, procedure, or project-context targets. |
 | **Hermes** | The agent framework that ties it together. The `jarvis_lookup` tool queries Jarvis on demand; Jev gates the call. |
 
-## How Storage Routing Works
+## Storage Routing Targets
 
 Before persisting anything, Jev's `agent_route` chooses the right storage target:
 
-```
-User Fact Storage  ────► memory(target='user')      — who you are, what you like
-Procedure Storage  ────► skill_manage create/patch   — how-to guides, setup steps
-Project Context    ────► Jarvis POST /v1/memory       — project state, git history
-```
+| Route | Target | What it stores |
+|-------|--------|----------------|
+| `user-fact-store` | `memory(target='user')` | Who you are, what you like, standing conventions |
+| `procedure-store` | `skill_manage create/patch` | How-to guides, setup steps, workflows, installation steps, walkthroughs |
+| `project-context-store` | `Jarvis POST /v1/memory` | Project state, git history, session context |
 
-Call `agent_route(task="<what to store>", agents=[user-fact, procedure, project])` and Jev picks the best match with fallback. This keeps facts in the domain where they're most useful — no more guessing whether a preference belongs in a skill or a config file.
+Call `agent_route(task="<what to store>", agents=[user-fact-store, procedure-store, project-context-store], scope="j2-stack")` and Jev picks the best match with fallback. This keeps facts in the domain where they're most useful — no more guessing whether a preference belongs in a skill or a config file.
 
 See [`skills/storage-router.md`](skills/storage-router.md) for the full protocol.
 
@@ -116,9 +116,28 @@ j2-stack/
 ├── docs/
 │   ├── architecture.md            # Detail on the retrieval pipeline
 │   └── troubleshooting.md
+├── .github/
+│   ├── ISSUE_TEMPLATE.md          # Bug report template
+│   ├── ISSUE_TEMPLATE/
+│   │   ├── bug_report.md
+│   │   ├── feature_request.md
+│   │   └── config.yml
+│   └── PULL_REQUEST_TEMPLATE.md   # PR template
+├── CODE_OF_CONDUCT.md             # Contributor Covenant v2.1
+├── CONTRIBUTING.md                # How to contribute
 ├── README.md
-└── LICENSE
+└── LICENSE                        # MIT
 ```
+
+## Community
+
+Contributions are welcome! Before opening an issue or PR:
+
+- Read [CONTRIBUTING.md](CONTRIBUTING.md) for the workflow and conventions
+- Use the issue templates (bug report / feature request) so we have the right info upfront
+- Follow [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) — be excellent to each other
+
+Three storage targets are defined in the J² profile — see [`configs/hermes-profile.yaml`](configs/hermes-profile.yaml) for the full agent definitions and their tags.
 
 ## Requirements
 
